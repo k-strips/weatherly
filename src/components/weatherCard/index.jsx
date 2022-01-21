@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAxiosFetch } from "../../hooks";
+import Search from "../search";
+import WeatherDetails from "../weatherDetails";
+import WeatherFooter from "../weatherFooter";
 
 const WeatherCard = () => {
   const [dataUrl, setDataUrl] = useState(null);
@@ -50,36 +53,15 @@ const WeatherCard = () => {
 
   console.log(data);
   return (
-    <div className="flex flex-column flex-nowrap w-1/2">
-      <h2 className="font-extrabold text-blue-600">weatherly</h2>
-      <div className="flex flex-row flex-nowrap">
-        <form onSubmit={handleSubmit}>
-          <input type="search" value={location} onChange={handleChange} />
-          <button type="submit">search</button>
-        </form>
-      </div>
-      <div className="flex flex-row flex-nowrap">
-        <div>
-          <figure>
-            <img
-              src={`https://openweathermap.org/img/wn/${data?.weather["icon"]}`}
-              alt="weather-icon"
-            />
-            <figcaption>{data?.weather?.description}</figcaption>
-          </figure>
-        </div>
-        <div>
-          {data && (
-            <>
-              <h3>
-                {data.name}, {data.sys.county}
-              </h3>
-              <h6>{new Date(data.dt).getDay()}</h6>
-            </>
-          )}
-        </div>
-      </div>
-      <div>icons here</div>
+    <div className="flex-col flex-nowrap w-1/2 p-4 max-w-sm mx-auto rounded-xl shadow-lg items-center space-x-4 ">
+      <h2 className="text-center font-extrabold text-blue-600">weatherly</h2>
+      <Search
+        location={location}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+      />
+      <WeatherDetails data={data} />
+      <WeatherFooter data={data} />
     </div>
   );
 };
