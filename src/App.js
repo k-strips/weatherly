@@ -2,7 +2,7 @@ import WeatherCard from "./components/weatherCard";
 
 function App() {
   return (
-    <div className="block">
+    <div className="min-h-screen">
       <WeatherCard />
     </div>
   );

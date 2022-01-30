@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useAxiosFetch } from "../../hooks";
 import Search from "../search";
-import WeatherDetails from "../weatherDetails";
-import WeatherFooter from "../weatherFooter";
+import TodayDetails from "../todayDetails";
+import Weather from "../weather";
+import DailyForcast from "../dailyForcast";
+import HourlyForcast from "../hourlyForcast";
 
 const WeatherCard = () => {
   const [dataUrl, setDataUrl] = useState(null);
@@ -25,7 +27,7 @@ const WeatherCard = () => {
 
   useEffect(() => {
     setDataUrl(
-      `${process.env.REACT_APP_BASE_URL}?lat=${coordinate.lat}&lon=${coordinate.lon}&appid=${process.env.REACT_APP_API_KEY}`
+      `${process.env.REACT_APP_BASE_URL}?lat=${coordinate.lat}&lon=${coordinate.lon}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
     );
   }, [coordinate.lat, coordinate.lon]);
 
@@ -47,21 +49,33 @@ const WeatherCard = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setDataUrl(
-      `${process.env.REACT_APP_BASE_URL}?q=${location}&appid=${process.env.REACT_APP_API_KEY}`
+      `${process.env.REACT_APP_BASE_URL}?q=${location}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
     );
   };
 
+  const [isDailyForcast, setIsDailyForcast] = useState(true);
+
   console.log(data);
   return (
-    <div className="flex-col flex-nowrap w-1/2 p-4 max-w-sm mx-auto rounded-xl shadow-lg items-center space-x-4 ">
-      <h2 className="text-center font-extrabold text-blue-600">weatherly</h2>
+    <div className="flex flex-col flex-nowrap border rounded w-full sm:w-screen md:w-1/2 mx-auto px-2">
+      <h2 className="text-center font-extrabold text-blue-400 text-2xl capitalize mb-2">
+        weatherly
+      </h2>
       <Search
         location={location}
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      <WeatherDetails data={data} />
-      <WeatherFooter data={data} />
+      <TodayDetails data={data?.current} />
+      <Weather data={data?.current?.weather[0]} />
+      <section>
+        <h3 className="text-center ">weather forcast</h3>
+        {isDailyForcast ? (
+          <DailyForcast data={data?.daily} />
+        ) : (
+          <HourlyForcast data={data?.hourly} />
+        )}
+      </section>
     </div>
   );
 };
