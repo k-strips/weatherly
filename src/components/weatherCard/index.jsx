@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAxiosFetch } from "../../hooks";
 import Search from "../search";
-import TodayDetails from "../todayDetails";
 import Weather from "../weather";
-import DailyForcast from "../dailyForcast";
-import HourlyForcast from "../hourlyForcast";
 
 const WeatherCard = () => {
   const [dataUrl, setDataUrl] = useState(null);
@@ -20,16 +17,18 @@ const WeatherCard = () => {
     } else {
       console.log(`geolocation not supported`);
     }
-    // return () => {
-    //   setUrl("");
-    // };
+    return () => {
+      setDataUrl("");
+      setCoordinate({ lat: 0, lon: 0 });
+    };
   }, []);
 
   useEffect(() => {
     setDataUrl(
       `${process.env.REACT_APP_BASE_URL}?lat=${coordinate.lat}&lon=${coordinate.lon}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
     );
-  }, [coordinate.lat, coordinate.lon]);
+    doFetch(dataUrl);
+  }, [coordinate.lat, coordinate.lon, dataUrl]);
 
   // location state
   const [location, setLocation] = useState("");
@@ -39,11 +38,16 @@ const WeatherCard = () => {
     setLocation(value);
   };
 
-  useEffect(() => {
-    doFetch(dataUrl);
-  }, [dataUrl]);
+  // useEffect(() => {
+  //   doFetch(dataUrl);
+  // }, [dataUrl]);
 
   const [{ data, fetchError, isLoading }, doFetch] = useAxiosFetch(dataUrl);
+
+  // const [
+  //   { data: weatherData, fetchError: weatherError, isLoading: weatherLoading },
+  //   geoFetch,
+  // ] = useAxiosFetch(dataUrl);
 
   // form on submit handler
   const handleSubmit = (e) => {
@@ -57,8 +61,8 @@ const WeatherCard = () => {
 
   console.log(data);
   return (
-    <div className="flex flex-col flex-nowrap border rounded w-full sm:w-screen md:w-1/2 mx-auto px-2">
-      <h2 className="text-center font-extrabold text-blue-400 text-2xl capitalize mb-2">
+    <div className="w-full sm:w-screen sm:mx-4 p-4 border ring-slate-500 rounded-md sm:mx-2 md:w-1/2 px-2 bg-blue opacity-60 backdrop-filter backdrop-blur-lg">
+      <h2 className="text-center font-extrabold text-blue-600 text-2xl capitalize mb-2">
         weatherly
       </h2>
       <Search
@@ -66,16 +70,7 @@ const WeatherCard = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      <TodayDetails data={data?.current} />
       <Weather data={data?.current?.weather[0]} />
-      <section>
-        <h3 className="text-center ">weather forcast</h3>
-        {isDailyForcast ? (
-          <DailyForcast data={data?.daily} />
-        ) : (
-          <HourlyForcast data={data?.hourly} />
-        )}
-      </section>
     </div>
   );
 };
