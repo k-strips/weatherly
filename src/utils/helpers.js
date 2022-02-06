@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const daysOfTheWeek = [
   "sunday",
   "monday",
@@ -8,4 +10,10 @@ const daysOfTheWeek = [
   "saturday",
 ];
 
-export { daysOfTheWeek };
+const locationToCoord = async (location) => {
+  let geoUrl = `${process.env.REACT_APP_GEO_BASE_URL}?q=${location}`;
+  let resp = await axios.get(geoUrl);
+  console.log(resp);
+};
+
+export { daysOfTheWeek, locationToCoord };

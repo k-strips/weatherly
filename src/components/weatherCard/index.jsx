@@ -3,6 +3,9 @@ import { useAxiosFetch } from "../../hooks";
 import Search from "../search";
 import Weather from "../weather";
 
+// local components import
+import { locationToCoord } from "../../utils";
+
 const WeatherCard = () => {
   const [dataUrl, setDataUrl] = useState(null);
   const [coordinate, setCoordinate] = useState({ lat: 0, lon: 0 });
@@ -25,7 +28,7 @@ const WeatherCard = () => {
 
   useEffect(() => {
     setDataUrl(
-      `${process.env.REACT_APP_BASE_URL}?lat=${coordinate.lat}&lon=${coordinate.lon}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+      `${process.env.REACT_APP_WEATHER_BASE_URL}?lat=${coordinate.lat}&lon=${coordinate.lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
     );
     doFetch(dataUrl);
   }, [coordinate.lat, coordinate.lon, dataUrl]);
@@ -35,33 +38,40 @@ const WeatherCard = () => {
   // input change handler for location
   const handleChange = (e) => {
     const { value } = e.target;
-    setLocation(value);
+    setLocation(value.toLowerCase());
   };
-
-  // useEffect(() => {
-  //   doFetch(dataUrl);
-  // }, [dataUrl]);
 
   const [{ data, fetchError, isLoading }, doFetch] = useAxiosFetch(dataUrl);
 
-  // const [
-  //   { data: weatherData, fetchError: weatherError, isLoading: weatherLoading },
-  //   geoFetch,
-  // ] = useAxiosFetch(dataUrl);
+  const [geoUrl, setGeoUrl] = useState(null);
+  const [
+    { data: geoData, fetchError: geoError, isLoading: geoLoading },
+    geoFetch,
+  ] = useAxiosFetch(geoUrl);
 
   // form on submit handler
   const handleSubmit = (e) => {
     e.preventDefault();
-    setDataUrl(
-      `${process.env.REACT_APP_BASE_URL}?q=${location}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+    setGeoUrl(
+      `${process.env.REACT_APP_GEO_BASE_URL}?key=${process.env.REACT_APP_GEO_API_KEY}&q=${location}`
     );
+
+    // geoFetch(geoUrl);
   };
 
-  const [isDailyForcast, setIsDailyForcast] = useState(true);
+  useEffect(() => {
+    geoFetch(geoUrl);
+  }, [geoFetch, geoUrl]);
+
+  // useEffect(() => {
+  //   setCoordinate(geoData?.results[0]?.bounds?.northeast);
+  //   // console.log("geo cord here");
+  // }, [geoData]);
 
   console.log(data);
+  console.log(geoData?.results[0]?.bounds?.northeast);
   return (
-    <div className="w-full sm:w-screen sm:mx-4 p-4 border ring-slate-500 rounded-md sm:mx-2 md:w-1/2 px-2 bg-blue opacity-60 backdrop-filter backdrop-blur-lg">
+    <div className="w-full sm:w-screen sm:mx-4 p-4 border ring-slate-500 rounded-md sm:mx-2 md:w-3/4 px-2 bg-blue opacity-60 backdrop-filter backdrop-blur-lg">
       <h2 className="text-center font-extrabold text-blue-600 text-2xl capitalize mb-2">
         weatherly
       </h2>
@@ -70,7 +80,7 @@ const WeatherCard = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      <Weather data={data?.current?.weather[0]} />
+      <Weather data={data} />
     </div>
   );
 };

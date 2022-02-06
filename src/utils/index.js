@@ -1,3 +1,3 @@
-import { daysOfTheWeek } from "./helpers";
+import { daysOfTheWeek, locationToCoord } from "./helpers";
 
-export { daysOfTheWeek };
+export { daysOfTheWeek, locationToCoord };

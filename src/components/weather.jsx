@@ -1,6 +1,5 @@
 import React from "react";
-import { FaTemperatureHigh, FaTemperatureLow, FaWind } from "react-icons/fa";
-import { WiWindy, WiHumidity } from "react-icons/wi";
+import { WiStrongWind, WiHumidity, WiBarometer } from "react-icons/wi";
 
 // local component import
 import WeatherFeature from "./weatherFeature";
@@ -12,35 +11,39 @@ const Weather = ({ data }) => {
         <div>
           <img
             className="m-0"
-            src={`http://openweathermap.org/img/wn/${data?.icon}.png`}
+            src={`http://openweathermap.org/img/wn/${data?.current?.weather[0]?.icon}.png`}
             width="100"
             height="100"
             alt="weather figure"
           />
-          <p className="font-bold italic text-center">{data?.description}</p>
-        </div>
-        <div className="">
-          <h1>20</h1>
+          <p className="font-bold italic text-center">
+            {data?.current?.weather[0]?.description}
+          </p>
         </div>
         <div>
           <WeatherFeature>
             <span>
-              <FaTemperatureHigh />
+              <WiBarometer size={20} />
             </span>
-            <span>temperature: </span>
+            <span>pressure:</span>
           </WeatherFeature>
           <WeatherFeature>
             <span>
               <WiHumidity size={20} />
             </span>
-            <span>humidity: </span>
+            <span>humidity: {data?.current?.humidity}</span>
           </WeatherFeature>
           <WeatherFeature>
             <span>
-              <FaWind />
+              <WiStrongWind size={20} />
             </span>
-            <span>wind: </span>
+            <span>
+              wind speed: {data?.current?.wind_speed} <small>km/h</small>
+            </span>
           </WeatherFeature>
+        </div>
+        <div className="text-center font-extrabold text-2xl mx-4">
+          {data?.current?.temp} <span>&#8451;</span>
         </div>
       </div>
       <div className="justify-self-end">
