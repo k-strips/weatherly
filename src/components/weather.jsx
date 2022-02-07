@@ -4,7 +4,7 @@ import { WiStrongWind, WiHumidity, WiBarometer } from "react-icons/wi";
 // local component import
 import WeatherFeature from "./weatherFeature";
 
-const Weather = ({ data }) => {
+const Weather = ({ data, components }) => {
   return (
     <section className="grid grid-cols-2 text-white">
       <div className="flex flex-row place-items-center">
@@ -47,7 +47,7 @@ const Weather = ({ data }) => {
         </div>
       </div>
       <div className="justify-self-end">
-        <p className="font-bold">Accra, Ghana</p>
+        <p className="font-bold">{`${components?.city}, ${components?.country}`}</p>
         <p>friday</p>
       </div>
     </section>

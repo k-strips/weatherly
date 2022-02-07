@@ -28,10 +28,10 @@ const WeatherCard = () => {
 
   useEffect(() => {
     setDataUrl(
-      `${process.env.REACT_APP_WEATHER_BASE_URL}?lat=${coordinate.lat}&lon=${coordinate.lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
+      `${process.env.REACT_APP_WEATHER_BASE_URL}?lat=${coordinate?.lat}&lon=${coordinate?.lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_API_KEY}`
     );
     doFetch(dataUrl);
-  }, [coordinate.lat, coordinate.lon, dataUrl]);
+  }, [coordinate?.lat, coordinate?.lon, dataUrl]);
 
   // location state
   const [location, setLocation] = useState("");
@@ -63,13 +63,17 @@ const WeatherCard = () => {
     geoFetch(geoUrl);
   }, [geoFetch, geoUrl]);
 
-  // useEffect(() => {
-  //   setCoordinate(geoData?.results[0]?.bounds?.northeast);
-  //   // console.log("geo cord here");
-  // }, [geoData]);
+  useEffect(() => {
+    setCoordinate({
+      lat: geoData?.results[0]?.bounds?.northeast?.lat,
+      lon: geoData?.results[0]?.bounds?.northeast?.lng,
+    });
+    // console.log("geo cord here");
+  }, [geoData?.results]);
 
   console.log(data);
-  console.log(geoData?.results[0]?.bounds?.northeast);
+  console.log(geoData?.results);
+  console.log(coordinate);
   return (
     <div className="w-full sm:w-screen sm:mx-4 p-4 border ring-slate-500 rounded-md sm:mx-2 md:w-3/4 px-2 bg-blue opacity-60 backdrop-filter backdrop-blur-lg">
       <h2 className="text-center font-extrabold text-blue-600 text-2xl capitalize mb-2">
@@ -80,7 +84,7 @@ const WeatherCard = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      <Weather data={data} />
+      <Weather data={data} components={geoData?.results[0]?.components} />
     </div>
   );
 };
