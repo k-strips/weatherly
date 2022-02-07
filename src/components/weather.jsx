@@ -29,7 +29,9 @@ const Weather = ({ data, geoData }) => {
             <span>
               <WiBarometer size={20} />
             </span>
-            <span>pressure:</span>
+            <span>
+              pressure: {data?.current?.pressure} <small>kPa</small>
+            </span>
           </WeatherFeature>
           <WeatherFeature>
             <span>
