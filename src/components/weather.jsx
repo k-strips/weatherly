@@ -7,8 +7,6 @@ import { daysOfTheWeek } from "../utils";
 
 const Weather = ({ data, geoData }) => {
   let town = geoData?.formatted.split(",");
-
-  console.log(data);
   return (
     <section className="grid grid-cols-2 text-white">
       <div className="flex flex-row place-items-center">
@@ -50,8 +48,8 @@ const Weather = ({ data, geoData }) => {
           {data?.current?.temp} <span>&#8451;</span>
         </div>
       </div>
-      <div className="justify-self-end">
-        <p className="font-bold">
+      <div className="justify-self-end capitalize">
+        <p className="font-bold capitalize">
           {town?.length <= 2
             ? `${town?.[0]}, ${town?.[1]}`
             : `${town?.[0]}, ${town?.[2]}`}
