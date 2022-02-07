@@ -65,15 +65,12 @@ const WeatherCard = () => {
 
   useEffect(() => {
     setCoordinate({
-      lat: geoData?.results[0]?.bounds?.northeast?.lat,
-      lon: geoData?.results[0]?.bounds?.northeast?.lng,
+      lat: geoData?.results[0]?.geometry?.lat,
+      lon: geoData?.results[0]?.geometry?.lng,
     });
     // console.log("geo cord here");
   }, [geoData?.results]);
 
-  console.log(data);
-  console.log(geoData?.results);
-  console.log(coordinate);
   return (
     <div className="w-full sm:w-screen sm:mx-4 p-4 border ring-slate-500 rounded-md sm:mx-2 md:w-3/4 px-2 bg-blue opacity-60 backdrop-filter backdrop-blur-lg">
       <h2 className="text-center font-extrabold text-blue-600 text-2xl capitalize mb-2">
@@ -84,7 +81,7 @@ const WeatherCard = () => {
         onChange={handleChange}
         onSubmit={handleSubmit}
       />
-      <Weather data={data} components={geoData?.results[0]?.components} />
+      <Weather data={data} geoData={geoData?.results[0]} />
     </div>
   );
 };

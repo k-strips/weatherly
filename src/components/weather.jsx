@@ -3,8 +3,12 @@ import { WiStrongWind, WiHumidity, WiBarometer } from "react-icons/wi";
 
 // local component import
 import WeatherFeature from "./weatherFeature";
+import { daysOfTheWeek } from "../utils";
 
-const Weather = ({ data, components }) => {
+const Weather = ({ data, geoData }) => {
+  let town = geoData?.formatted.split(",");
+
+  console.log(data);
   return (
     <section className="grid grid-cols-2 text-white">
       <div className="flex flex-row place-items-center">
@@ -47,8 +51,15 @@ const Weather = ({ data, components }) => {
         </div>
       </div>
       <div className="justify-self-end">
-        <p className="font-bold">{`${components?.city}, ${components?.country}`}</p>
-        <p>friday</p>
+        <p className="font-bold">
+          {town?.length <= 2
+            ? `${town?.[0]}, ${town?.[1]}`
+            : `${town?.[0]}, ${town?.[2]}`}
+        </p>
+        <p>
+          {data?.current?.dt &&
+            daysOfTheWeek[`${new Date(data?.current?.dt * 1000).getDay()}`]}
+        </p>
       </div>
     </section>
   );
